@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply transition-colors duration-300;
+  }
+  
+  body {
+    @apply bg-editorial-bg text-editorial-black font-sans antialiased transition-colors duration-300;
+  }
+
+  /* Force dark mode styles on body if selector is present */
+  .dark body {
+    background-color: #09090b; /* zinc-950 */
+    color: #f4f4f5; /* zinc-100 */
+  }
+}
+
+@layer utilities {
+  .serif {
+    @apply font-serif;
+  }
+}
