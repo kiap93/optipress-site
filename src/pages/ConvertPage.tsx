@@ -199,7 +199,7 @@ export default function ConvertPage() {
           <div className="flex flex-col gap-6">
             
             {/* Quick Select Grid */}
-            <div className="grid grid-cols-2 gap-2 md:grid-cols-5">
+            <div className="flex overflow-x-auto pb-4 gap-2 md:grid md:grid-cols-5 md:overflow-visible md:pb-0 scrollbar-hide">
               {CONVERSIONS.slice(0, 10).map((rule) => {
                 const Icon = rule.icon;
                 const isActive = selectedRule.path === rule.path;
@@ -207,14 +207,18 @@ export default function ConvertPage() {
                   <button
                     key={rule.label}
                     onClick={() => { navigate(`/${rule.path}`); setFiles([]); setError(null); }}
-                    className={`flex flex-col items-center gap-3 border p-4 transition-all ${
+                    className={cn(
+                      "flex min-w-[120px] flex-col items-center gap-3 border p-4 transition-all md:min-w-0",
                       isActive 
                         ? "border-editorial-black bg-white dark:border-white dark:bg-zinc-900 shadow-sm" 
                         : "border-editorial-border bg-zinc-50/50 hover:bg-white dark:border-zinc-800 dark:bg-zinc-900/30 dark:hover:bg-zinc-900"
-                    }`}
+                    )}
                   >
-                    <Icon className={`h-6 w-6 ${isActive ? 'text-editorial-black dark:text-white' : 'text-zinc-400'}`} />
-                    <span className={`text-[10px] font-bold uppercase tracking-tight ${isActive ? 'text-editorial-black dark:text-white' : 'text-zinc-500'}`}>
+                    <Icon className={cn("h-6 w-6", isActive ? 'text-editorial-black dark:text-white' : 'text-zinc-400')} />
+                    <span className={cn(
+                      "text-[10px] font-bold uppercase tracking-tight text-center",
+                      isActive ? 'text-editorial-black dark:text-white' : 'text-zinc-500'
+                    )}>
                       {rule.label}
                     </span>
                   </button>
@@ -222,7 +226,7 @@ export default function ConvertPage() {
               })}
             </div>
 
-            <div className="border border-editorial-border bg-white p-8 dark:border-zinc-800 dark:bg-zinc-900">
+            <div className="border border-editorial-border bg-white p-6 md:p-8 dark:border-zinc-800 dark:bg-zinc-900">
               <FileUploader 
                  onFilesSelected={handleFilesSelected} 
                  multiple={true} 
