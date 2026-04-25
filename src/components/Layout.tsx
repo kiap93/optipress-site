@@ -30,8 +30,10 @@ export function Navbar() {
             <span className="serif text-xl font-bold italic tracking-tight text-editorial-black dark:text-white">OptiPress.</span>
           </Link>
           <div className="hidden items-center gap-6 md:flex">
-            {/* <Link to="/compress-image" className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 hover:text-editorial-black dark:text-zinc-400 dark:hover:text-white transition-colors">Compression</Link> */}
-            {/* <Link to="/pricing" className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 hover:text-editorial-black dark:text-zinc-400 dark:hover:text-white transition-colors">Pricing</Link> */}
+            <Link to="/compress-image" className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 hover:text-editorial-black dark:text-zinc-400 dark:hover:text-white transition-colors">Images</Link>
+            <Link to="/compress-pdf" className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 hover:text-editorial-black dark:text-zinc-400 dark:hover:text-white transition-colors">PDF Tools</Link>
+            <Link to="/compress-pdf-to-1mb" className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:text-zinc-500 dark:hover:text-white transition-colors">to 1MB</Link>
+            <Link to="/compress-pdf-for-email" className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:text-zinc-500 dark:hover:text-white transition-colors">Email PDF</Link>
           </div>
         </div>
 

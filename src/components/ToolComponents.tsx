@@ -84,6 +84,79 @@ export function ImageUploader({
   );
 }
 
+// Generic File Uploader
+export function FileUploader({ 
+  onFilesSelected,
+  className,
+  accept = "*",
+  multiple = true
+}: { 
+  onFilesSelected: (files: File[]) => void,
+  className?: string,
+  accept?: string,
+  multiple?: boolean
+}) {
+  const [isDragging, setIsDragging] = React.useState(false);
+
+  const handleDrag = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setIsDragging(true);
+    } else if (e.type === "dragleave") {
+      setIsDragging(false);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const files = Array.from(e.dataTransfer.files) as File[];
+    if (files.length > 0) onFilesSelected(files);
+  };
+
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []) as File[];
+    if (files.length > 0) onFilesSelected(files);
+  };
+
+  return (
+    <div 
+      onDragEnter={handleDrag}
+      onDragOver={handleDrag}
+      onDragLeave={handleDrag}
+      onDrop={handleDrop}
+      className={cn(
+        "relative transition-all duration-200 border-2 border-dashed",
+        isDragging 
+          ? "border-editorial-black bg-white dark:border-white dark:bg-zinc-900" 
+          : "border-editorial-border bg-zinc-50/50 hover:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-900/30",
+        className
+      )}
+    >
+      <input 
+        type="file" 
+        multiple={multiple} 
+        accept={accept} 
+        onChange={handleInput}
+        className="absolute inset-0 cursor-pointer opacity-0"
+      />
+      <div className="flex flex-col items-center justify-center p-16 text-center">
+        <div className="mb-4 h-12 w-12 flex items-center justify-center bg-zinc-100 dark:bg-zinc-800 rounded-full">
+          <Upload className="h-5 w-5 text-zinc-400" />
+        </div>
+        <h3 className="mb-1 text-[11px] font-bold uppercase tracking-widest text-editorial-black dark:text-white">Select File to Process</h3>
+        <p className="mb-6 text-[9px] text-zinc-400 uppercase tracking-wider">
+          {accept === "application/pdf" ? "PDF documents only" : "All file types supported"}
+        </p>
+        <div className="flex items-center gap-2 border border-editorial-black bg-white px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest text-editorial-black dark:border-zinc-700 dark:bg-zinc-800 dark:text-white hover:bg-zinc-50 transition-colors">
+          Browse Files
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // Side-by-side Preview (Individual Image Card)
 export function ImageCard({ 
   originalFile, 
