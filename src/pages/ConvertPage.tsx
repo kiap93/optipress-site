@@ -8,7 +8,7 @@ import {
   ArrowRight, FileImage, FileCode, FileSpreadsheet, 
   FileBox, FileDigit, Repeat, ChevronRight, X
 } from "lucide-react";
-import { Helmet } from "react-helmet-async";
+import { SEOTags } from "../components/SEOTags";
 import { useLocation, useNavigate } from "react-router-dom";
 import { jpgToPdf, pdfToJpg, pdfToWord, pdfToExcel, pdfToHtml } from "../lib/pdfConverter";
 import { downloadFile } from "../lib/compress";
@@ -173,11 +173,11 @@ export default function ConvertPage() {
 
   return (
     <div className="min-h-screen bg-editorial-bg dark:bg-zinc-950 transition-colors duration-300">
-      <Helmet>
-        <title>{seoContent.metaTitle || "Premium PDF Converter Tool | OptiPress"}</title>
-        <meta name="description" content={seoContent.metaDesc} />
-        <link rel="canonical" href={`${BASE_URL}/${currentPath}`} />
-      </Helmet>
+      <SEOTags 
+        title={seoContent.metaTitle || "Premium PDF Converter Tool | OptiPress"}
+        description={seoContent.metaDesc}
+        canonical={`${BASE_URL}/${currentPath}`}
+      />
 
       <Navbar />
 

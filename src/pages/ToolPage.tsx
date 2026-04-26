@@ -15,7 +15,7 @@ import { SEO_PAGES, BASE_URL } from "../seo-config";
 import { compressImage, downloadFile } from "../lib/compress";
 import { motion, AnimatePresence } from "motion/react";
 import { Download, Sliders, Zap, Shield, Info, ArrowRight } from "lucide-react";
-import { Helmet } from "react-helmet-async";
+import { SEOTags } from "../components/SEOTags";
 import JSZip from "jszip";
 
 export default function ToolPage() {
@@ -161,8 +161,8 @@ export default function ToolPage() {
     downloadFile(content, "optipress_batch_bundle.zip");
   };
 
-  // Structured Data (JSON-LD)
-  const structuredData = {
+  // Structured Data (JSON-LD) for WebApplication
+  const toolStructuredData = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "OptiPress",
@@ -179,27 +179,12 @@ export default function ToolPage() {
 
   return (
     <div className="min-h-screen bg-editorial-bg dark:bg-zinc-950 transition-colors duration-300">
-      <Helmet>
-        <title>{seoContent.metaTitle}</title>
-        <meta name="description" content={seoContent.metaDesc} />
-        <link rel="canonical" href={seoContent.canonical} />
-        
-        {/* Open Graph */}
-        <meta property="og:title" content={seoContent.metaTitle} />
-        <meta property="og:description" content={seoContent.metaDesc} />
-        <meta property="og:url" content={seoContent.canonical} />
-        <meta property="og:type" content="website" />
-        
-        {/* Twitter Card */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={seoContent.metaTitle} />
-        <meta name="twitter:description" content={seoContent.metaDesc} />
-
-        {/* Structured Data */}
-        <script type="application/ld+json">
-          {JSON.stringify(structuredData)}
-        </script>
-      </Helmet>
+      <SEOTags 
+        title={seoContent.metaTitle}
+        description={seoContent.metaDesc}
+        canonical={seoContent.canonical}
+        structuredData={[toolStructuredData]}
+      />
 
       <Navbar />
       

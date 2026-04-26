@@ -7,9 +7,9 @@ import { cn } from "../lib/utils";
 export function Logo({ className = "w-10 h-10" }: { className?: string }) {
   return (
     <svg width="40" height="40" viewBox="0 0 40 40" className={cn("transition-transform", className)}>
-      <rect x="8" y="10" width="8" height="20" className="fill-editorial-black dark:fill-white" />
-      <rect x="18" y="14" width="6" height="12" className="fill-zinc-500 dark:fill-zinc-400" />
-      <rect x="26" y="17" width="4" height="6" className="fill-zinc-300 dark:fill-zinc-600" />
+      <rect x="8" y="10" width="8" height="20" fill="currentColor" className="text-[#111] dark:text-white" />
+      <rect x="18" y="14" width="6" height="12" fill="currentColor" className="text-[#555] dark:text-zinc-400" />
+      <rect x="26" y="17" width="4" height="6" fill="currentColor" className="text-[#999] dark:text-zinc-600" />
     </svg>
   );
 }
@@ -131,39 +131,42 @@ export function Navbar() {
 
 export function Footer() {
   return (
-    <footer className="w-full border-t border-editorial-border bg-white py-8 transition-colors duration-300 dark:border-zinc-800 dark:bg-zinc-950">
+    <footer className="w-full border-t border-editorial-border bg-white py-12 transition-colors duration-300 dark:border-zinc-800 dark:bg-zinc-950">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="mb-8 grid grid-cols-2 gap-8 md:grid-cols-4">
-          <div>
-            <h4 className="mb-4 text-[10px] font-black uppercase tracking-[0.2em] text-editorial-black dark:text-white">Compression</h4>
-            <ul className="flex flex-col gap-2">
-              <li><Link to="/compress-image" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">Image Compression</Link></li>
-              <li><Link to="/compress-pdf" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">PDF Compression</Link></li>
-              <li><Link to="/compress-pdf-to-1mb" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">PDF to 1MB</Link></li>
-            </ul>
+        <div className="mb-12 flex flex-col md:flex-row justify-between items-start gap-8">
+          <div className="flex flex-col gap-4 max-w-xs">
+            <Link to="/" className="flex items-center gap-2 group">
+              <Logo className="w-8 h-8 group-hover:rotate-6 transition-transform" />
+              <span className="serif text-xl font-bold italic tracking-tight text-editorial-black dark:text-white">OptiPress.</span>
+            </Link>
+            <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-relaxed uppercase tracking-wider">
+              Premium browser-based optimization suite for editorial teams and high-fidelity output.
+            </p>
           </div>
-          <div>
-            <h4 className="mb-4 text-[10px] font-black uppercase tracking-[0.2em] text-editorial-black dark:text-white">Converter</h4>
-            <ul className="flex flex-col gap-2">
-              <li><Link to="/jpg-to-pdf" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">JPG to PDF</Link></li>
-              <li><Link to="/pdf-to-jpg" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">PDF to JPG</Link></li>
-              <li><Link to="/html-to-pdf" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">HTML to PDF</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="mb-4 text-[10px] font-black uppercase tracking-[0.2em] text-editorial-black dark:text-white">Office Tools</h4>
-            <ul className="flex flex-col gap-2">
-              <li><Link to="/word-to-pdf" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">Word to PDF</Link></li>
-              <li><Link to="/excel-to-pdf" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">Excel to PDF</Link></li>
-              <li><Link to="/pdf-to-word" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">PDF to Word</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="mb-4 text-[10px] font-black uppercase tracking-[0.2em] text-editorial-black dark:text-white">Professional</h4>
-            <ul className="flex flex-col gap-2">
-              <li><Link to="/pricing" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">Pricing</Link></li>
-              <li className="text-[10px] uppercase tracking-widest text-zinc-400 italic">API Integration</li>
-            </ul>
+          <div className="grid grid-cols-2 gap-12 md:grid-cols-3 flex-grow">
+            <div>
+              <h4 className="mb-6 text-[10px] font-black uppercase tracking-[0.2em] text-editorial-black dark:text-white">Compression</h4>
+              <ul className="flex flex-col gap-3">
+                <li><Link to="/compress-image" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">Image Compression</Link></li>
+                <li><Link to="/compress-pdf" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">PDF Compression</Link></li>
+                <li><Link to="/compress-pdf-to-1mb" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">PDF to 1MB</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="mb-6 text-[10px] font-black uppercase tracking-[0.2em] text-editorial-black dark:text-white">Conversion</h4>
+              <ul className="flex flex-col gap-3">
+                <li><Link to="/jpg-to-pdf" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">JPG to PDF</Link></li>
+                <li><Link to="/pdf-to-jpg" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">PDF to JPG</Link></li>
+                <li><Link to="/html-to-pdf" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">HTML to PDF</Link></li>
+              </ul>
+            </div>
+            <div className="hidden md:block">
+              <h4 className="mb-6 text-[10px] font-black uppercase tracking-[0.2em] text-editorial-black dark:text-white">Product</h4>
+              <ul className="flex flex-col gap-3">
+                <li><Link to="/pricing" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">Pricing</Link></li>
+                <li><span className="text-[10px] uppercase tracking-widest text-zinc-400 italic">API Access</span></li>
+              </ul>
+            </div>
           </div>
         </div>
 

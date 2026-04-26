@@ -5,7 +5,7 @@ import { FileUploader, AdPlaceholder } from "../components/ToolComponents";
 import { SEOSection } from "../components/SEOContent";
 import { motion, AnimatePresence } from "motion/react";
 import { FileText, Download, Zap, Shield, Loader2, CheckCircle2, ArrowRight, X, Layers } from "lucide-react";
-import { Helmet } from "react-helmet-async";
+import { SEOTags } from "../components/SEOTags";
 import { compressPdf, PDFCompressionResult } from "../lib/pdfOptimizer";
 import { downloadFile } from "../lib/compress";
 import { BASE_URL, SEO_PAGES } from "../seo-config";
@@ -101,11 +101,11 @@ export default function PdfCompressPage() {
 
   return (
     <div className="min-h-screen bg-editorial-bg dark:bg-zinc-950 transition-colors duration-300">
-      <Helmet>
-        <title>{seoContent.metaTitle}</title>
-        <meta name="description" content={seoContent.metaDesc} />
-        <link rel="canonical" href={seoContent.canonical} />
-      </Helmet>
+      <SEOTags 
+        title={seoContent.metaTitle}
+        description={seoContent.metaDesc}
+        canonical={seoContent.canonical}
+      />
 
       <Navbar />
 

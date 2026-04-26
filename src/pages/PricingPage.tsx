@@ -3,7 +3,7 @@ import { Navbar, Footer } from "../components/Layout";
 import { Check, Zap, Shield, Globe, Cpu } from "lucide-react";
 import { motion } from "motion/react";
 import { AdPlaceholder } from "../components/ToolComponents";
-import { Helmet } from "react-helmet-async";
+import { SEOTags } from "../components/SEOTags";
 import { BASE_URL } from "../seo-config";
 
 const PLANS = [
@@ -41,11 +41,11 @@ const PLANS = [
 export default function PricingPage() {
   return (
     <div className="min-h-screen bg-editorial-bg dark:bg-zinc-950 transition-colors duration-300">
-      <Helmet>
-        <title>Pricing – OptiPress Pro Optimization</title>
-        <meta name="description" content="Transparent pricing for OptiPress Pro. Higher batch limits, AI-enhanced sharpness, and developer features." />
-        <link rel="canonical" href={`${BASE_URL}/pricing`} />
-      </Helmet>
+      <SEOTags 
+        title="Pricing – OptiPress Pro Optimization"
+        description="Transparent pricing for OptiPress Pro. Higher batch limits, AI-enhanced sharpness, and developer features."
+        canonical={`${BASE_URL}/pricing`}
+      />
       <Navbar />
       
       <main className="mx-auto max-w-7xl px-6 py-16">
