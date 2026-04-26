@@ -2,7 +2,7 @@ import { PDFDocument } from 'pdf-lib';
 import * as pdfjs from 'pdfjs-dist';
 
 // Set worker path for pdfjs
-pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs`;
 
 export async function jpgToPdf(files: File[]): Promise<Blob> {
   const pdfDoc = await PDFDocument.create();

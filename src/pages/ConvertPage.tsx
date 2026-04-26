@@ -13,6 +13,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { jpgToPdf, pdfToJpg, pdfToWord, pdfToExcel, pdfToHtml } from "../lib/pdfConverter";
 import { downloadFile } from "../lib/compress";
 import { BASE_URL, SEO_PAGES } from "../seo-config";
+import { cn } from "../lib/utils";
 import JSZip from "jszip";
 
 type ConversionFormat = 'jpg' | 'pdf' | 'word' | 'excel' | 'ppt' | 'html';
