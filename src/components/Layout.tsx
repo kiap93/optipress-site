@@ -4,6 +4,16 @@ import { Maximize2, Zap, Shield, Moon, Sun, Menu, X, ChevronRight } from "lucide
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "../lib/utils";
 
+export function Logo({ className = "w-10 h-10" }: { className?: string }) {
+  return (
+    <svg width="40" height="40" viewBox="0 0 40 40" className={cn("transition-transform", className)}>
+      <rect x="8" y="10" width="8" height="20" className="fill-editorial-black dark:fill-white" />
+      <rect x="18" y="14" width="6" height="12" className="fill-zinc-500 dark:fill-zinc-400" />
+      <rect x="26" y="17" width="4" height="6" className="fill-zinc-300 dark:fill-zinc-600" />
+    </svg>
+  );
+}
+
 export function Navbar() {
   const [isOpen, setIsOpen] = React.useState(false);
   const location = useLocation();
@@ -36,11 +46,7 @@ export function Navbar() {
       <div className="mx-auto flex h-[60px] max-w-7xl items-center justify-between px-6">
         <div className="flex items-center gap-8">
           <Link to="/" className="flex items-center gap-2 group">
-            <svg width="40" height="40" viewBox="0 0 40 40" className="transition-transform group-hover:scale-105">
-              <rect x="8" y="10" width="8" height="20" className="fill-editorial-black dark:fill-white" />
-              <rect x="18" y="14" width="6" height="12" className="fill-zinc-500 dark:fill-zinc-400" />
-              <rect x="26" y="17" width="4" height="6" className="fill-zinc-300 dark:fill-zinc-600" />
-            </svg>
+            <Logo className="group-hover:scale-105" />
             <span className="serif text-xl font-bold italic tracking-tight text-editorial-black dark:text-white transition-transform group-hover:-rotate-2">OptiPress.</span>
           </Link>
           <div className="hidden items-center gap-6 md:flex">

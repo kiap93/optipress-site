@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { Navbar, Footer } from "../components/Layout";
+import { Navbar, Footer, Logo } from "../components/Layout";
 import { FileUploader, AdPlaceholder } from "../components/ToolComponents";
 import { SEOSection } from "../components/SEOContent";
 import { motion, AnimatePresence } from "motion/react";
@@ -116,9 +116,12 @@ export default function PdfCompressPage() {
             <span className="h-px w-12 bg-editorial-border dark:bg-zinc-800"></span>
             <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Stable v1.1</span>
           </div>
-          <h1 className="serif text-4xl font-bold italic tracking-tight text-editorial-black dark:text-white md:text-6xl">
-            Batch PDF Optimization.
-          </h1>
+          <div className="flex items-center gap-4">
+            <Logo className="w-16 h-16 hidden md:block" />
+            <h1 className="serif text-4xl font-bold italic tracking-tight text-editorial-black dark:text-white md:text-6xl">
+              Batch PDF Optimization.
+            </h1>
+          </div>
           <p className="max-w-xl text-sm font-medium text-zinc-500 dark:text-zinc-400">
             Compress dozens of PDFs simultaneously. Our engine handles asset extraction and re-encoding entirely in your browser's RAM.
           </p>

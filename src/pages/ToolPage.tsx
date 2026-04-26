@@ -2,7 +2,8 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { 
   Navbar, 
-  Footer 
+  Footer,
+  Logo 
 } from "../components/Layout";
 import { 
   ImageUploader, 
@@ -212,9 +213,12 @@ export default function ToolPage() {
             <div className="control-card bg-white border border-editorial-border p-6 shadow-sm dark:bg-zinc-900 dark:border-zinc-800">
                 <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
                 <div className="flex-grow">
-                   <h1 className="serif text-4xl font-bold tracking-tight text-editorial-black dark:text-white sm:text-5xl mb-2">
-                     {seoContent.title.includes("OptiPress") ? "Editorial Image Optimization" : seoContent.title}
-                   </h1>
+                   <div className="flex items-center gap-3 mb-2">
+                     <Logo className="w-12 h-12 hidden md:block" />
+                     <h1 className="serif text-4xl font-bold tracking-tight text-editorial-black dark:text-white sm:text-5xl">
+                       {seoContent.title.includes("OptiPress") ? "Editorial Image Optimization" : seoContent.title}
+                     </h1>
+                   </div>
                    <p className="text-xs text-zinc-500 uppercase tracking-wide max-w-lg">
                       High-fidelity client-side compression. No uploads. 100% private processing in your local browser cache.
                    </p>
