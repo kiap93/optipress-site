@@ -8,6 +8,7 @@ import { HelmetProvider } from "react-helmet-async";
 import ToolPage from "./pages/ToolPage";
 import PdfCompressPage from "./pages/PdfCompressPage";
 import ConvertPage from "./pages/ConvertPage";
+import PdfToolsPage from "./pages/PdfToolsPage";
 import PricingPage from "./pages/PricingPage";
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<ToolPage />} />
           <Route path="/compress-image" element={<ToolPage />} />
+          <Route path="/pdf-tools" element={<PdfToolsPage />} />
           <Route path="/compress-pdf" element={<PdfCompressPage />} />
           <Route path="/compress-pdf-to-1mb" element={<PdfCompressPage />} />
           <Route path="/compress-pdf-for-email" element={<PdfCompressPage />} />
@@ -32,6 +34,8 @@ export default function App() {
           <Route path="/pdf-to-excel" element={<ConvertPage />} />
           <Route path="/pdf-to-ppt" element={<ConvertPage />} />
           <Route path="/pdf-to-html" element={<ConvertPage />} />
+          <Route path="/merge-pdf" element={<ConvertPage />} />
+          <Route path="/split-pdf" element={<ConvertPage />} />
 
           <Route path="/compress-image-to-100kb" element={<ToolPage />} />
           <Route path="/png-to-webp" element={<ToolPage />} />

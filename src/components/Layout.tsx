@@ -37,7 +37,7 @@ export function Navbar() {
 
   const navLinks = [
     { name: "Images", path: "/compress-image" },
-    { name: "PDF Tools", path: "/compress-pdf" },
+    { name: "PDF Tools", path: "/pdf-tools" },
     { name: "Converters", path: "/jpg-to-pdf" },
   ];
 
@@ -143,20 +143,30 @@ export function Footer() {
               Premium browser-based optimization suite for editorial teams and high-fidelity output.
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-12 md:grid-cols-3 flex-grow">
+          <div className="grid grid-cols-2 gap-12 md:grid-cols-4 flex-grow">
             <div>
-              <h4 className="mb-6 text-[10px] font-black uppercase tracking-[0.2em] text-editorial-black dark:text-white">Compression</h4>
+              <h4 className="mb-6 text-[10px] font-black uppercase tracking-[0.2em] text-editorial-black dark:text-white">PDF Tools</h4>
               <ul className="flex flex-col gap-3">
-                <li><Link to="/compress-image" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">Image Compression</Link></li>
-                <li><Link to="/compress-pdf" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">PDF Compression</Link></li>
-                <li><Link to="/compress-pdf-to-1mb" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">PDF to 1MB</Link></li>
+                <li><Link to="/pdf-tools" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">All PDF Tools</Link></li>
+                <li><Link to="/merge-pdf" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">Merge PDF</Link></li>
+                <li><Link to="/split-pdf" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">Split PDF</Link></li>
+                <li><Link to="/compress-pdf" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">Compression</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="mb-6 text-[10px] font-black uppercase tracking-[0.2em] text-editorial-black dark:text-white">Conversion</h4>
+              <h4 className="mb-6 text-[10px] font-black uppercase tracking-[0.2em] text-editorial-black dark:text-white">Image Tools</h4>
+              <ul className="flex flex-col gap-3">
+                <li><Link to="/compress-image" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">Compression</Link></li>
+                <li><Link to="/png-to-webp" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">PNG to WebP</Link></li>
+                <li><Link to="/jpg-to-png" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">JPG to PNG</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="mb-6 text-[10px] font-black uppercase tracking-[0.2em] text-editorial-black dark:text-white">Converters</h4>
               <ul className="flex flex-col gap-3">
                 <li><Link to="/jpg-to-pdf" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">JPG to PDF</Link></li>
-                <li><Link to="/pdf-to-jpg" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">PDF to JPG</Link></li>
+                <li><Link to="/pdf-to-word" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">PDF to Word</Link></li>
+                <li><Link to="/pdf-to-excel" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">PDF to Excel</Link></li>
                 <li><Link to="/html-to-pdf" className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-editorial-black dark:hover:text-white transition-colors">HTML to PDF</Link></li>
               </ul>
             </div>

@@ -10,19 +10,25 @@ import {
 } from "lucide-react";
 import { SEOTags } from "../components/SEOTags";
 import { useLocation, useNavigate } from "react-router-dom";
-import { jpgToPdf, pdfToJpg, pdfToWord, pdfToExcel, pdfToHtml } from "../lib/pdfConverter";
+import { jpgToPdf, pdfToJpg, pdfToWord, pdfToExcel, pdfToHtml, mergePdfs, splitPdf, getPdfPageCount } from "../lib/pdfConverter";
 import { downloadFile } from "../lib/compress";
 import { BASE_URL, SEO_PAGES } from "../seo-config";
 import { cn } from "../lib/utils";
 import JSZip from "jszip";
+import { Plus, Trash2 } from "lucide-react";
 
-type ConversionFormat = 'jpg' | 'pdf' | 'word' | 'excel' | 'ppt' | 'html';
+type ConversionFormat = 'jpg' | 'pdf' | 'docx' | 'excel' | 'ppt' | 'html' | 'pdf-merge' | 'pdf-split';
 
 interface ConversionRule {
   from: ConversionFormat;
   to: ConversionFormat;
   label: string;
   icon: React.ElementType;
+}
+
+interface SplitRange {
+  start: number;
+  end: number;
 }
 
 const formatBytes = (bytes: number, decimals: number = 2) => {
@@ -39,22 +45,32 @@ interface ConversionFileState {
   file: File;
   status: 'idle' | 'processing' | 'completed' | 'error';
   progress: number;
+  message?: string;
   result?: Blob | Blob[];
   errorMessage?: string;
+  pageCount?: number;
+  splitRanges?: SplitRange[];
 }
 
 const CONVERSIONS: (ConversionRule & { path: string })[] = [
   { from: 'jpg', to: 'pdf', label: 'JPG to PDF', icon: FileImage, path: 'jpg-to-pdf' },
   { from: 'pdf', to: 'jpg', label: 'PDF to JPG', icon: FileText, path: 'pdf-to-jpg' },
-  { from: 'word', to: 'pdf', label: 'Word to PDF', icon: FileBox, path: 'word-to-pdf' },
+  { from: 'docx', to: 'pdf', label: 'Word to PDF', icon: FileBox, path: 'word-to-pdf' },
   { from: 'excel', to: 'pdf', label: 'Excel to PDF', icon: FileSpreadsheet, path: 'excel-to-pdf' },
   { from: 'ppt', to: 'pdf', label: 'PowerPoint to PDF', icon: FileDigit, path: 'ppt-to-pdf' },
   { from: 'html', to: 'pdf', label: 'HTML to PDF', icon: FileCode, path: 'html-to-pdf' },
-  { from: 'pdf', to: 'word', label: 'PDF to Word', icon: FileBox, path: 'pdf-to-word' },
+  { from: 'pdf', to: 'docx', label: 'PDF to Word', icon: FileBox, path: 'pdf-to-word' },
   { from: 'pdf', to: 'excel', label: 'PDF to Excel', icon: FileSpreadsheet, path: 'pdf-to-excel' },
   { from: 'pdf', to: 'ppt', label: 'PDF to PPT', icon: FileDigit, path: 'pdf-to-ppt' },
   { from: 'pdf', to: 'html', label: 'PDF to HTML', icon: FileCode, path: 'pdf-to-html' },
 ];
+
+const PDF_UTILITIES: (ConversionRule & { path: string })[] = [
+  { from: 'pdf', to: 'pdf-merge', label: 'Merge PDF', icon: Repeat, path: 'merge-pdf' },
+  { from: 'pdf', to: 'pdf-split', label: 'Split PDF', icon: Repeat, path: 'split-pdf' },
+];
+
+const ALL_CONVERSIONS = [...CONVERSIONS, ...PDF_UTILITIES];
 
 export default function ConvertPage() {
   const location = useLocation();
@@ -62,8 +78,11 @@ export default function ConvertPage() {
   const currentPath = location.pathname.substring(1);
 
   const selectedRule = useMemo(() => {
-    return CONVERSIONS.find(c => c.path === currentPath) || CONVERSIONS[0];
+    return ALL_CONVERSIONS.find(c => c.path === currentPath) || CONVERSIONS[0];
   }, [currentPath]);
+
+  const isPdfUtility = PDF_UTILITIES.some(u => u.path === currentPath);
+  const displayList = isPdfUtility ? PDF_UTILITIES : CONVERSIONS;
 
   const [files, setFiles] = useState<ConversionFileState[]>([]);
   const [isProcessingAll, setIsProcessingAll] = useState(false);
@@ -71,15 +90,73 @@ export default function ConvertPage() {
 
   const seoContent = useMemo(() => SEO_PAGES[currentPath] || SEO_PAGES["default"], [currentPath]);
 
-  const handleFilesSelected = (newFiles: File[]) => {
-    const queue = newFiles.map(f => ({
-      id: Math.random().toString(36).substring(7),
-      file: f,
-      status: 'idle' as const,
-      progress: 0
-    }));
+  const handleFilesSelected = async (newFiles: File[]) => {
+    const queue: ConversionFileState[] = [];
+    
+    for (const f of newFiles) {
+      const id = Math.random().toString(36).substring(7);
+      let pageCount: number | undefined;
+      let splitRanges: SplitRange[] | undefined;
+
+      if (selectedRule.to === 'pdf-split' && f.type === 'application/pdf') {
+        try {
+          pageCount = await getPdfPageCount(f);
+          splitRanges = [{ start: 1, end: pageCount }];
+        } catch (e) {
+          console.error("Failed to get page count", e);
+        }
+      }
+
+      queue.push({
+        id,
+        file: f,
+        status: 'idle',
+        progress: 0,
+        pageCount,
+        splitRanges
+      });
+    }
+
     setFiles(prev => [...prev, ...queue]);
     setError(null);
+  };
+
+  const addRange = (fileId: string) => {
+    setFiles(prev => prev.map(f => {
+      if (f.id === fileId && f.splitRanges && f.pageCount) {
+        const lastRange = f.splitRanges[f.splitRanges.length - 1];
+        const nextStart = Math.min(f.pageCount, lastRange.end + 1);
+        return {
+          ...f,
+          splitRanges: [...f.splitRanges, { start: nextStart, end: f.pageCount }]
+        };
+      }
+      return f;
+    }));
+  };
+
+  const removeRange = (fileId: string, rangeIndex: number) => {
+    setFiles(prev => prev.map(f => {
+      if (f.id === fileId && f.splitRanges && f.splitRanges.length > 1) {
+        return {
+          ...f,
+          splitRanges: f.splitRanges.filter((_, i) => i !== rangeIndex)
+        };
+      }
+      return f;
+    }));
+  };
+
+  const updateRange = (fileId: string, rangeIndex: number, field: 'start' | 'end', value: number) => {
+    setFiles(prev => prev.map(f => {
+      if (f.id === fileId && f.splitRanges && f.pageCount) {
+        const newRanges = [...f.splitRanges];
+        const val = Math.max(1, Math.min(f.pageCount, value));
+        newRanges[rangeIndex] = { ...newRanges[rangeIndex], [field]: val };
+        return { ...f, splitRanges: newRanges };
+      }
+      return f;
+    }));
   };
 
   const removeFile = (id: string) => {
@@ -87,16 +164,22 @@ export default function ConvertPage() {
   };
 
   const runSingleConversion = async (fileState: ConversionFileState): Promise<Blob | Blob[]> => {
+    const updateMsg = (msg: string) => {
+      setFiles(prev => prev.map(f => f.id === fileState.id ? { ...f, message: msg } : f));
+    };
+
     if (selectedRule.from === 'jpg' && selectedRule.to === 'pdf') {
       return await jpgToPdf([fileState.file]);
     } else if (selectedRule.from === 'pdf' && selectedRule.to === 'jpg') {
       return await pdfToJpg(fileState.file);
-    } else if (selectedRule.from === 'pdf' && selectedRule.to === 'word') {
-      return await pdfToWord(fileState.file);
+    } else if (selectedRule.from === 'pdf' && selectedRule.to === 'docx') {
+      return await pdfToWord(fileState.file, updateMsg);
     } else if (selectedRule.from === 'pdf' && selectedRule.to === 'excel') {
       return await pdfToExcel(fileState.file);
     } else if (selectedRule.from === 'pdf' && selectedRule.to === 'html') {
       return await pdfToHtml(fileState.file);
+    } else if (selectedRule.to === 'pdf-split') {
+      return await splitPdf(fileState.file, fileState.splitRanges);
     }
     throw new Error(`The ${selectedRule.label} conversion is currently being optimized.`);
   };
@@ -105,6 +188,30 @@ export default function ConvertPage() {
     if (files.length === 0 || isProcessingAll) return;
     setIsProcessingAll(true);
     setError(null);
+
+    // Special case for Merge PDF (Batch-to-One)
+    if (selectedRule.to === 'pdf-merge') {
+      if (files.length < 2) {
+        setError("Please add at least 2 PDF files to merge.");
+        setIsProcessingAll(false);
+        return;
+      }
+      
+      setFiles(prev => prev.map(f => ({ ...f, status: 'processing', progress: 50, message: 'Merging...' })));
+      try {
+        const mergedBlob = await mergePdfs(files.map(f => f.file));
+        // Update the first file with the result and mark others as done or handled
+        setFiles(prev => prev.map((f, i) => i === 0 
+          ? { ...f, status: 'completed', result: mergedBlob, progress: 100, message: 'Merged!' }
+          : { ...f, status: 'completed', progress: 100, message: 'Included in merge' }
+        ));
+      } catch (err: any) {
+        setError(err.message || "Merge failed");
+        setFiles(prev => prev.map(f => ({ ...f, status: 'error' })));
+      }
+      setIsProcessingAll(false);
+      return;
+    }
 
     const idleFiles = files.filter(f => f.status === 'idle');
 
@@ -132,16 +239,19 @@ export default function ConvertPage() {
     const res = fileState.result;
 
     if (Array.isArray(res)) {
+      const ext = res[0].type === 'application/pdf' ? 'pdf' : 'jpg';
       if (res.length === 1) {
-        downloadFile(res[0], `optipress_${fileState.file.name.split('.')[0]}.jpg`);
+        downloadFile(res[0], `optipress_${fileState.file.name.split('.')[0]}_part_1.${ext}`);
       } else {
         const zip = new JSZip();
-        res.forEach((blob, i) => zip.file(`page_${i + 1}.jpg`, blob));
+        res.forEach((blob, i) => zip.file(`part_${i + 1}.${ext}`, blob));
         const zipBlob = await zip.generateAsync({ type: 'blob' });
-        downloadFile(zipBlob, `optipress_${fileState.file.name.split('.')[0]}_images.zip`);
+        downloadFile(zipBlob, `optipress_${fileState.file.name.split('.')[0]}_bundle.zip`);
       }
     } else {
-      downloadFile(res, `optipress_${fileState.file.name.split('.')[0]}.${selectedRule.to}`);
+      const ext = selectedRule.to === 'pdf-merge' ? 'pdf' : selectedRule.to;
+      const fileName = selectedRule.to === 'pdf-merge' ? 'optipress_merged.pdf' : `optipress_${fileState.file.name.split('.')[0]}.${ext}`;
+      downloadFile(res, fileName);
     }
   };
 
@@ -204,7 +314,7 @@ export default function ConvertPage() {
             
             {/* Quick Select Grid */}
             <div className="flex overflow-x-auto pb-4 gap-2 md:grid md:grid-cols-5 md:overflow-visible md:pb-0 scrollbar-hide">
-              {CONVERSIONS.slice(0, 10).map((rule) => {
+              {displayList.slice(0, 10).map((rule) => {
                 const Icon = rule.icon;
                 const isActive = selectedRule.path === rule.path;
                 return (
@@ -271,12 +381,12 @@ export default function ConvertPage() {
                            {isProcessingAll ? 'Converting...' : 'Start Batch'}
                          </button>
                        )}
-                       {files.some(f => f.status === 'completed') && (
+                       {files.some(f => f.status === 'completed' && f.result) && (
                          <button 
                            onClick={downloadAll}
                            className="bg-emerald-600 px-6 py-2 text-[10px] font-black uppercase tracking-widest text-white hover:bg-emerald-700 transition-all"
                          >
-                           Download All (.zip)
+                           {selectedRule.to === 'pdf-merge' ? 'Download Merged PDF' : 'Download All (.zip)'}
                          </button>
                        )}
                     </div>
@@ -291,41 +401,98 @@ export default function ConvertPage() {
                         animate={{ opacity: 1, x: 0 }}
                         className="group relative flex items-center justify-between border border-editorial-border bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900"
                       >
-                        <div className="flex items-center gap-4">
-                          <FileText className={`h-5 w-5 ${fileState.status === 'completed' ? 'text-emerald-500' : 'text-zinc-300'}`} />
-                          <div>
-                            <p className="text-xs font-bold text-editorial-black dark:text-white truncate max-w-[200px] md:max-w-md">{fileState.file.name}</p>
-                            <div className="flex gap-2 text-[9px] font-bold uppercase tracking-tight text-zinc-400">
-                               <span>{formatBytes(fileState.file.size)}</span>
-                               <span>&rarr; {selectedRule.to.toUpperCase()}</span>
+                        <div className="flex flex-col flex-1 gap-2">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                              <FileText className={`h-5 w-5 ${fileState.status === 'completed' ? 'text-emerald-500' : 'text-zinc-300'}`} />
+                              <div>
+                                <p className="text-xs font-bold text-editorial-black dark:text-white truncate max-w-[200px] md:max-w-md">{fileState.file.name}</p>
+                                <div className="flex gap-2 text-[9px] font-bold uppercase tracking-tight text-zinc-400">
+                                   <span>{formatBytes(fileState.file.size)}</span>
+                                   <span>&rarr; {selectedRule.to.toUpperCase()}</span>
+                                   {fileState.pageCount && <span>• {fileState.pageCount} Pages</span>}
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-4">
+                               {fileState.status === 'processing' && (
+                                 <div className="flex items-center gap-2">
+                                   <Loader2 className="h-3 w-3 animate-spin text-zinc-400" />
+                                   <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">
+                                     {fileState.message || `${fileState.progress}%`}
+                                   </span>
+                                 </div>
+                               )}
+                               
+                               {fileState.status === 'completed' && fileState.result && selectedRule.to !== 'pdf-merge' && (
+                                 <button 
+                                   onClick={() => handleDownloadSingle(fileState)}
+                                   className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                                 >
+                                   <Download className="h-4 w-4 text-emerald-600" />
+                                 </button>
+                               )}
+
+                               <button 
+                                  onClick={() => removeFile(fileState.id)}
+                                  disabled={isProcessingAll && fileState.status === 'processing'}
+                                  className="p-2 text-zinc-300 hover:text-red-500 transition-colors disabled:opacity-0"
+                               >
+                                  <X className="h-4 w-4" />
+                               </button>
                             </div>
                           </div>
-                        </div>
 
-                        <div className="flex items-center gap-4">
-                           {fileState.status === 'processing' && (
-                             <div className="flex items-center gap-2">
-                               <Loader2 className="h-3 w-3 animate-spin text-zinc-400" />
-                               <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">{fileState.progress}%</span>
-                             </div>
-                           )}
-                           
-                           {fileState.status === 'completed' && (
-                             <button 
-                               onClick={() => handleDownloadSingle(fileState)}
-                               className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-                             >
-                               <Download className="h-4 w-4 text-emerald-600" />
-                             </button>
-                           )}
-
-                           <button 
-                              onClick={() => removeFile(fileState.id)}
-                              disabled={isProcessingAll && fileState.status === 'processing'}
-                              className="p-2 text-zinc-300 hover:text-red-500 transition-colors disabled:opacity-0"
-                           >
-                              <X className="h-4 w-4" />
-                           </button>
+                          {selectedRule.to === 'pdf-split' && fileState.splitRanges && fileState.status === 'idle' && (
+                            <div className="mt-4 border-t border-editorial-border pt-4 dark:border-zinc-800">
+                              <div className="mb-2 flex items-center justify-between">
+                                <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Split Ranges</span>
+                                <button 
+                                  onClick={(e) => { e.stopPropagation(); addRange(fileState.id); }}
+                                  className="flex items-center gap-1 text-[10px] font-bold text-editorial-black hover:underline dark:text-white"
+                                >
+                                  <Plus className="h-3 w-3" /> Add Range
+                                </button>
+                              </div>
+                              <div className="flex flex-col gap-2">
+                                {fileState.splitRanges.map((range, idx) => (
+                                  <div key={idx} className="flex items-center gap-3">
+                                    <div className="flex items-center gap-2">
+                                      <label className="text-[10px] font-bold text-zinc-400 uppercase">From</label>
+                                      <input 
+                                        type="number" 
+                                        value={range.start}
+                                        min={1}
+                                        max={fileState.pageCount}
+                                        onChange={(e) => updateRange(fileState.id, idx, 'start', parseInt(e.target.value))}
+                                        className="w-16 border border-editorial-border bg-zinc-50 px-2 py-1 text-[11px] font-mono focus:border-editorial-black focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-white"
+                                      />
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <label className="text-[10px] font-bold text-zinc-400 uppercase">To</label>
+                                      <input 
+                                        type="number" 
+                                        value={range.end}
+                                        min={1}
+                                        max={fileState.pageCount}
+                                        onChange={(e) => updateRange(fileState.id, idx, 'end', parseInt(e.target.value))}
+                                        className="w-16 border border-editorial-border bg-zinc-50 px-2 py-1 text-[11px] font-mono focus:border-editorial-black focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-white"
+                                      />
+                                    </div>
+                                    {fileState.splitRanges!.length > 1 && (
+                                      <button 
+                                        onClick={(e) => { e.stopPropagation(); removeRange(fileState.id, idx); }}
+                                        className="p-1 text-zinc-300 hover:text-red-500 transition-colors"
+                                      >
+                                        <Trash2 className="h-3 w-3" />
+                                      </button>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
 
                         {fileState.status === 'processing' && (
@@ -375,7 +542,7 @@ export default function ConvertPage() {
             <div className="border border-editorial-border bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
               <h3 className="mb-4 text-[10px] font-bold uppercase tracking-widest text-zinc-400">Popular Tools</h3>
               <div className="flex flex-col gap-2">
-                {CONVERSIONS.slice(0, 6).map((rule) => (
+                {displayList.slice(0, 6).map((rule) => (
                   <button 
                     key={rule.label}
                     onClick={() => { navigate(`/${rule.path}`); setFiles([]); setError(null); }}

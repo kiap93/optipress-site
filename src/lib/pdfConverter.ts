@@ -1,5 +1,7 @@
 import { PDFDocument } from 'pdf-lib';
 import * as pdfjs from 'pdfjs-dist';
+import { createWorker } from 'tesseract.js';
+import { Document, Packer, Paragraph, TextRun } from 'docx';
 
 // Set worker path for pdfjs
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@5.6.205/build/pdf.worker.min.mjs`;
@@ -57,32 +59,79 @@ export async function pdfToJpg(file: File): Promise<Blob[]> {
   return imageBlobs;
 }
 
-export async function pdfToWord(file: File): Promise<Blob> {
+export async function pdfToWord(file: File, onProgress?: (msg: string) => void): Promise<Blob> {
   const arrayBuffer = await file.arrayBuffer();
   const loadingTask = pdfjs.getDocument({ data: arrayBuffer });
   const pdf = await loadingTask.promise;
-  let text = '';
+  
+  const paragraphs: Paragraph[] = [];
+  let worker: any = null;
 
   for (let i = 1; i <= pdf.numPages; i++) {
+    onProgress?.(`Processing Page ${i} of ${pdf.numPages}...`);
     const page = await pdf.getPage(i);
     const content = await page.getTextContent();
-    const strings = content.items.map((item: any) => item.str);
-    text += strings.join(' ') + '\n\n';
+    
+    let pageText = "";
+    
+    // Check if page has sufficient text content
+    if (content.items.length > 10) {
+      const strings = content.items.map((item: any) => item.str);
+      pageText = strings.join(" ");
+    } else {
+      // Fallback to OCR for scanned PDFs
+      onProgress?.(`OCR Scanning Page ${i}...`);
+      if (!worker) {
+        worker = await createWorker("eng");
+      }
+      
+      const viewport = page.getViewport({ scale: 2.0 });
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      
+      if (context) {
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        
+        await page.render({
+          canvasContext: context,
+          viewport: viewport,
+          canvas: canvas as any
+        }).promise;
+        
+        const { data: { text } } = await worker.recognize(canvas);
+        pageText = text;
+      }
+    }
+
+    if (pageText.trim()) {
+      // Split by newlines to create multiple paragraphs for better formatting
+      const lines = pageText.split("\n");
+      lines.forEach(line => {
+        if (line.trim()) {
+          paragraphs.push(
+            new Paragraph({
+              children: [new TextRun(line.trim())],
+              spacing: { after: 200 }
+            })
+          );
+        }
+      });
+    }
   }
 
-  // Create a minimal .doc content (actually HTML which Word can open)
-  const docContent = `
-    <html>
-      <head><meta charset="utf-8"></head>
-      <body>
-        <div style="font-family: Arial, sans-serif; white-space: pre-wrap;">
-          ${text}
-        </div>
-      </body>
-    </html>
-  `;
-  
-  return new Blob([docContent], { type: 'application/msword' });
+  if (worker) {
+    await worker.terminate();
+  }
+
+  const doc = new Document({
+    sections: [{
+      properties: {},
+      children: paragraphs,
+    }],
+  });
+
+  return await Packer.toBlob(doc);
 }
 
 export async function pdfToExcel(file: File): Promise<Blob> {
@@ -163,7 +212,58 @@ export async function htmlToPdf(html: string): Promise<Blob> {
     size: 20
   });
   // Since we are client-side only, we might suggest window.print() or use a library
-  // For the sake of this demo, we'll return a placeholder or use html2pdf if needed.
   const pdfBytes = await pdfDoc.save();
   return new Blob([pdfBytes], { type: 'application/pdf' });
+}
+
+export async function mergePdfs(files: File[]): Promise<Blob> {
+  const mergedPdf = await PDFDocument.create();
+  
+  for (const file of files) {
+    const bytes = await file.arrayBuffer();
+    const pdf = await PDFDocument.load(bytes);
+    const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+    copiedPages.forEach((page) => mergedPdf.addPage(page));
+  }
+  
+  const pdfBytes = await mergedPdf.save();
+  return new Blob([pdfBytes], { type: 'application/pdf' });
+}
+
+export async function getPdfPageCount(file: File): Promise<number> {
+  const bytes = await file.arrayBuffer();
+  const pdf = await PDFDocument.load(bytes);
+  return pdf.getPageCount();
+}
+
+export async function splitPdf(file: File, ranges?: { start: number, end: number }[]): Promise<Blob[]> {
+  const bytes = await file.arrayBuffer();
+  const mainPdf = await PDFDocument.load(bytes);
+  const pdfs: Blob[] = [];
+  const totalPages = mainPdf.getPageCount();
+
+  // If no ranges provided, default to splitting every page (original behavior)
+  const actualRanges = ranges || Array.from({ length: totalPages }, (_, i) => ({ start: i + 1, end: i + 1 }));
+  
+  for (const range of actualRanges) {
+    const singlePdf = await PDFDocument.create();
+    // pdf-lib indices are 0-based
+    const startIdx = Math.max(0, range.start - 1);
+    const endIdx = Math.min(totalPages - 1, range.end - 1);
+    
+    if (startIdx > endIdx) continue;
+
+    const indices = [];
+    for (let i = startIdx; i <= endIdx; i++) {
+        indices.push(i);
+    }
+
+    const copiedPages = await singlePdf.copyPages(mainPdf, indices);
+    copiedPages.forEach(page => singlePdf.addPage(page));
+    
+    const pdfBytes = await singlePdf.save();
+    pdfs.push(new Blob([pdfBytes], { type: 'application/pdf' }));
+  }
+  
+  return pdfs;
 }

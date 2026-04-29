@@ -4,20 +4,23 @@ export const BASE_URL = "https://optipress.ai";
 
 export const SEO_PAGES: Record<string, SEOContentProps & { metaTitle: string; metaDesc: string; canonical: string }> = {
   "default": {
-    metaTitle: "OptiPress – Compress Images Without Losing Quality",
-    metaDesc: "Free online image compression tool. Reduce image size without losing quality using smart AI compression. 100% private and secure.",
+    metaTitle: "Free & Private Online PDF & Image Tools | Compress, Convert, Manage | OptiPress",
+    metaDesc: "All-in-one free online tools for image compress, pdf compress, merge, split, and conversion (Word, Excel, JPG, HTML). 100% private, browser-based processing.",
     canonical: BASE_URL,
-    title: "How OptiPress Revolutionizes Image Optimization",
-    subtitle: "High-fidelity client-side compression. No uploads. 100% private processing.",
+    title: "Free and Secure Online PDF & Image Optimization Platform",
+    subtitle: "Professional-grade image compress, pdf compress, and format conversion tools with absolute privacy.",
     paragraphs: [
-      "OptiPress was built with a single mission: to make image optimization fast, secure, and accessible to everyone. Unlike traditional tools that upload your sensitive data to remote servers, OptiPress uses cutting-edge browser APIs to process everything right on your device.",
-      "Whether you are a developer looking to improve Web Vitals, a marketer optimizing social media assets, or a photographer managing large galleries, our tool ensures your images maintain exceptional clarity while shedding unnecessary kilobytes in seconds.",
-      "Our multi-threaded engine handles batch processing effortlessly, allowing you to optimize dozens of images simultaneously without any lag."
+      "In today's digital world, handling documents and images efficiently is a daily necessity. Whether you need to image compress for faster web performance, pdf compress for email attachments, or perform complex tasks like pdf merge and pdf split, you need a tool you can trust. OptiPress provides a comprehensive suite of tools including jpg to pdf, pdf to jpg, and various format conversions like word to pdf, excel to pdf, powerpoint to pdf, and even html to pdf. The best part? It's completely free and built with a 'privacy-first' philosophy, meaning your files never leave your computer.",
+      "OptiPress is a state-of-the-art, browser-based file processing platform. Unlike traditional 'cloud-based' converters that upload your data to a remote server, OptiPress uses your device's own processing power to perform tasks locally. This unique approach ensures that everything from pdf to word, pdf to excel, pdf to ppt, and pdf to html happens in the safety of your own browser without any data leaks.",
+      "How to use our tools: 1. Select your target feature (e.g., pdf compress or jpg to pdf). 2. Select files from your device. 3. Adjust settings if needed (like splitting ranges for pdf split). 4. Download your results instantly. All processing is fast, free, and secure.",
+      "Benefits of using OptiPress: We offer ultimate privacy because your files are never uploaded. This means zero risk of third-party interception. You also get unmatched speed—no waiting for large files to upload or download from a server. It's completely free with no hidden subscriptions or watermarks, making it the perfect professional tool for students, developers, and businesses alike.",
+      "Common use cases: (1) Shrinking images for faster website loading (image compress). (2) Combining multiple project reports into one document (pdf merge). (3) Extracting specific pages from a long handbook (pdf split). (4) Converting bank statements or legal docs to editable formats (pdf to word or pdf to excel)."
     ],
     faqs: [
-      { question: "Is my data safe?", answer: "Yes. Your images never leave your browser. All processing happens locally on your computer." },
-      { question: "What formats do you support?", answer: "We support PNG, JPG, and WebP formats for both input and output." },
-      { question: "Is there a file size limit?", answer: "The browser's memory is your only limit, but we recommend files under 50MB for the best experience." }
+      { question: "Is OptiPress really free?", answer: "Yes, all features including merge, split, compress, and conversion (word to pdf, excel to pdf, etc.) are completely free to use." },
+      { question: "Will my files be stored on your server?", answer: "Absolutely not. We prioritize your privacy. All processing happens locally in your browser's memory, so your files are never uploaded to any server." },
+      { question: "Do I need to sign up?", answer: "No account or registration is required. You can use all our professional tools immediately without providing an email address." },
+      { question: "Can I use it on my mobile?", answer: "Yes, OptiPress is fully responsive and works perfectly on modern mobile browsers for quick on-the-go edits." }
     ]
   },
   "compress-image": {
@@ -272,6 +275,54 @@ export const SEO_PAGES: Record<string, SEOContentProps & { metaTitle: string; me
     faqs: [
       { question: "Do all browsers support WebP?", answer: "Yes, all modern browsers including Chrome, Safari, Firefox, and Edge fully support WebP." },
       { question: "Does WebP support transparent backgrounds?", answer: "Yes, WebP is an excellent replacement for PNG for images with transparency." }
+    ]
+  },
+  "merge-pdf": {
+    metaTitle: "Merge PDF Online - Combine PDF Files Locally | OptiPress",
+    metaDesc: "Combine multiple PDF files into a single document instantly. 100% private and secure processing right in your browser.",
+    canonical: `${BASE_URL}/merge-pdf`,
+    title: "Combine PDF Documents Securely",
+    subtitle: "Merge files into a unified document without server uploads.",
+    paragraphs: [
+      "Whether you're combining monthly reports, school assignments, or legal documents, merging PDFs should be simple and secure. OptiPress allows you to stack as many PDF files as you need into a single multi-page document. Our tool reorders and concatenates the files with perfect fidelity.",
+      "Privacy is non-negotiable for sensitive documents. By utilizing client-side processing, OptiPress ensures your contracts, bank statements, and personal IDs never leave your computer. We don't just protect your data; we keep it entirely in your possession.",
+      "Our multi-threaded engine handles large PDF merges smoothly, even with complex graphics or hundreds of pages. Simply drag, drop, and merge in seconds."
+    ],
+    faqs: [
+      { question: "Is there a limit to how many PDFs I can merge?", answer: "The only limit is your browser's available memory, though for best performance we recommend merging no more than 20-30 files at once." },
+      { question: "Will the page order be preserved?", answer: "Yes, files are merged in the exact order they appear in your upload queue." }
+    ]
+  },
+  "split-pdf": {
+    metaTitle: "Split PDF Online - Extract Pages Separately | OptiPress",
+    metaDesc: "Burst any PDF file into separate pages or specific ranges. Secure, high-speed client-side extraction 100% locally.",
+    canonical: `${BASE_URL}/split-pdf`,
+    title: "Precision PDF Splitting",
+    subtitle: "Extract individual pages or specific ranges from your documents instantly.",
+    paragraphs: [
+      "Need a single page from a 100-page report? OptiPress allows you to split any PDF into individual pages or specific custom ranges with one click. Our tool identifies every page boundary and generates separate, high-quality PDF files according to your needs.",
+      "Security is paramount when handling confidential files. Unlike cloud-based tools that store your documents on their disks, OptiPress works entirely in your temporary browser memory. Your document is processed, split, and ready for download without ever touching a server.",
+      "Once split, you can download all pages as a single, organized ZIP file. It's the most efficient way to manage large document bundles privately."
+    ],
+    faqs: [
+      { question: "Can I split specific page ranges?", answer: "Yes! Our tool supports custom range selection. You can specify start and end pages for multiple output files at once." },
+      { question: "Does splitting reduce quality?", answer: "No. Splitting is a lossless operation that preserves the original text, fonts, and images of every page." }
+    ]
+  },
+  "pdf-tools": {
+    metaTitle: "Advanced PDF Utilities | Merge, Split, & Compress PDFs | OptiPress",
+    metaDesc: "The complete toolkit for PDF management. Merge multiple documents, split pages with custom ranges, and compress PDFs for email without losing quality.",
+    canonical: `${BASE_URL}/pdf-tools`,
+    title: "Professional PDF Management Suite",
+    subtitle: "Fast, efficient, and private tools for all your document needs.",
+    paragraphs: [
+      "Managing PDF files shouldn't be a security risk. OptiPress offers a robust suite of tools designed to handle your professional documents right in your browser. Whether you're combining monthly reports using our pdf merge feature or extracting specific sections using pdf split, we ensure the process is seamless.",
+      "Our compression engine is optimized for high-fidelity documents, allowing you to pdf compress large files for email without making the text unreadable. By utilizing your device's own hardware, we eliminate the need for server-side processing, keeping your sensitive editorial data 100% private.",
+      "From office administrators to creative professionals, OptiPress provides the minimalist, high-speed toolkit required for modern document workflows. No accounts, no uploads, just pure performance."
+    ],
+    faqs: [
+      { question: "Can I use these tools for free?", answer: "Yes, our entire suite of PDF utilities is free to use without any limitations or registrations." },
+      { question: "Are my documents safe?", answer: "We use client-side technology, meaning your PDFs never leave your machine. This is the highest level of privacy available online." }
     ]
   }
 };
