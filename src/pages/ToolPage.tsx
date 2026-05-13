@@ -192,7 +192,7 @@ export default function ToolPage() {
       
       <main className="mx-auto max-w-7xl px-6 py-6 transition-all duration-300">
         {/* Layout for Top Ad */}
-        <AdUnit slot="5164259009" className="mb-8" format="horizontal" style={{ height: '90px' }} />
+        <AdUnit slot="5164259009" format="horizontal" style={{ height: '90px' }} />
 
         <div className="flex flex-col gap-8 lg:flex-row">
           {/* Left Column: Tool */}

@@ -23,10 +23,10 @@ export const AdUnit = ({ slot, format = 'auto', className = '', style }: AdUnitP
   }, []);
 
   return (
-    <div className={`ad-container overflow-hidden flex justify-center ${className}`} style={style}>
+    <div className={`ad-container overflow-hidden w-full flex justify-center ${className}`} style={style}>
       <ins
         className="adsbygoogle"
-        style={{ display: 'block', minWidth: '250px', ...style }}
+        style={{ display: 'block', width: '100%', ...style }}
         data-ad-client="ca-pub-1430587625650027"
         data-ad-slot={slot}
         data-ad-format={format}
