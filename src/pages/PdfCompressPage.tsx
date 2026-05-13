@@ -111,7 +111,7 @@ export default function PdfCompressPage() {
       <Navbar />
 
       <main className="mx-auto max-w-7xl px-6 py-6 transition-all duration-300">
-        <AdUnit slot="5164259009" className="mb-8" />
+        <AdUnit slot="5164259009" className="mb-8" format="horizontal" style={{ height: '90px' }} />
         <div className="mb-12 flex flex-col gap-2 border-b border-editorial-border pb-8 dark:border-zinc-800">
           <div className="flex items-center gap-2">
             <span className="bg-editorial-black px-2 py-0.5 text-[10px] font-bold text-white uppercase tracking-widest dark:bg-white dark:text-editorial-black">PDF Batch Toolkit</span>

@@ -50,7 +50,7 @@ export default function PricingPage() {
       <Navbar />
       
       <main className="mx-auto max-w-7xl px-6 py-16">
-        <AdUnit slot="5164259009" className="mb-12" />
+        <AdUnit slot="5164259009" className="mb-12" format="horizontal" style={{ height: '90px' }} />
         <div className="text-center mb-16">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}

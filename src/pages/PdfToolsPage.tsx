@@ -57,7 +57,7 @@ export default function PdfToolsPage() {
       <Navbar />
 
       <main className="mx-auto max-w-7xl px-6 py-20">
-        <AdUnit slot="5164259009" className="mb-8" />
+        <AdUnit slot="5164259009" className="mb-8" format="horizontal" style={{ height: '90px' }} />
         <div className="mb-16 max-w-2xl">
           <div className="mb-6 flex items-center gap-3">
             <span className="h-px w-12 bg-editorial-border dark:bg-zinc-800"></span>
