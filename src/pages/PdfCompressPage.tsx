@@ -8,6 +8,7 @@ import { FileText, Download, Zap, Shield, Loader2, CheckCircle2, ArrowRight, X, 
 import { SEOTags } from "../components/SEOTags";
 import { compressPdf, PDFCompressionResult } from "../lib/pdfOptimizer";
 import { downloadFile } from "../lib/compress";
+import { AdUnit } from "../components/AdUnit";
 import { BASE_URL, SEO_PAGES } from "../seo-config";
 import JSZip from "jszip";
 
@@ -110,6 +111,7 @@ export default function PdfCompressPage() {
       <Navbar />
 
       <main className="mx-auto max-w-7xl px-6 py-6 transition-all duration-300">
+        <AdUnit slot="5164259009" className="mb-8" />
         <div className="mb-12 flex flex-col gap-2 border-b border-editorial-border pb-8 dark:border-zinc-800">
           <div className="flex items-center gap-2">
             <span className="bg-editorial-black px-2 py-0.5 text-[10px] font-bold text-white uppercase tracking-widest dark:bg-white dark:text-editorial-black">PDF Batch Toolkit</span>
@@ -261,7 +263,7 @@ export default function PdfCompressPage() {
           </div>
 
           <aside className="flex flex-col gap-6">
-            <AdPlaceholder position="top" />
+            <AdUnit slot="5164259009" className="mb-4" />
             
             <div className="border border-editorial-border bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
               <h3 className="mb-4 text-[10px] font-bold uppercase tracking-widest text-zinc-400">How it works</h3>

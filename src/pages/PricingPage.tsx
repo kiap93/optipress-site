@@ -3,6 +3,7 @@ import { Navbar, Footer } from "../components/Layout";
 import { Check, Zap, Shield, Globe, Cpu } from "lucide-react";
 import { motion } from "motion/react";
 import { AdPlaceholder } from "../components/ToolComponents";
+import { AdUnit } from "../components/AdUnit";
 import { SEOTags } from "../components/SEOTags";
 import { BASE_URL } from "../seo-config";
 
@@ -49,6 +50,7 @@ export default function PricingPage() {
       <Navbar />
       
       <main className="mx-auto max-w-7xl px-6 py-16">
+        <AdUnit slot="5164259009" className="mb-12" />
         <div className="text-center mb-16">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}

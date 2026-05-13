@@ -17,6 +17,8 @@ import { cn } from "../lib/utils";
 import JSZip from "jszip";
 import { Plus, Trash2 } from "lucide-react";
 
+import { AdUnit } from "../components/AdUnit";
+
 type ConversionFormat = 'jpg' | 'pdf' | 'docx' | 'excel' | 'ppt' | 'html' | 'pdf-merge' | 'pdf-split';
 
 interface ConversionRule {
@@ -292,6 +294,7 @@ export default function ConvertPage() {
       <Navbar />
 
       <main className="mx-auto max-w-7xl px-6 py-6 transition-all duration-300">
+        <AdUnit slot="5164259009" className="mb-8" />
         <div className="mb-12 flex flex-col gap-2 border-b border-editorial-border pb-8 dark:border-zinc-800">
           <div className="flex items-center gap-2">
             <span className="bg-editorial-black px-2 py-0.5 text-[10px] font-bold text-white uppercase tracking-widest dark:bg-white dark:text-editorial-black">File Conversion</span>
@@ -537,7 +540,7 @@ export default function ConvertPage() {
           </div>
 
           <aside className="flex flex-col gap-6">
-            <AdPlaceholder position="top" />
+            <AdUnit slot="5164259009" className="mb-4" />
             
             <div className="border border-editorial-border bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
               <h3 className="mb-4 text-[10px] font-bold uppercase tracking-widest text-zinc-400">Popular Tools</h3>

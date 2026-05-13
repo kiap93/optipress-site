@@ -18,6 +18,8 @@ import { Download, Sliders, Zap, Shield, Info, ArrowRight } from "lucide-react";
 import { SEOTags } from "../components/SEOTags";
 import JSZip from "jszip";
 
+import { AdUnit } from "../components/AdUnit";
+
 export default function ToolPage() {
   const location = useLocation();
   const pathKey = location.pathname.split("/").filter(Boolean)[0] || "default";
@@ -190,7 +192,7 @@ export default function ToolPage() {
       
       <main className="mx-auto max-w-7xl px-6 py-6 transition-all duration-300">
         {/* Layout for Top Ad */}
-        <AdPlaceholder position="top" />
+        <AdUnit slot="5164259009" className="mb-8" />
 
         <div className="flex flex-col gap-8 lg:flex-row">
           {/* Left Column: Tool */}
@@ -312,10 +314,13 @@ export default function ToolPage() {
             </div>
 
             <SEOSection content={seoContent} />
+            <AdUnit slot="5164259009" format="horizontal" className="my-8" />
           </div>
 
           {/* Right Column: Sidebar */}
           <aside className="lg:w-1/4 flex flex-col gap-6">
+            <AdUnit slot="5164259009" className="mb-4" />
+            
             <div className="border-b border-editorial-border pb-6 dark:border-zinc-800">
               <h2 className="serif text-xl font-bold leading-tight mb-3 dark:text-white">Image Intelligence</h2>
               <p className="text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400">

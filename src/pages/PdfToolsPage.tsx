@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { SEO_PAGES, BASE_URL } from "../seo-config";
 import { SEOSection } from "../components/SEOContent";
+import { AdUnit } from "../components/AdUnit";
 
 const PDF_TOOLS = [
   {
@@ -56,6 +57,7 @@ export default function PdfToolsPage() {
       <Navbar />
 
       <main className="mx-auto max-w-7xl px-6 py-20">
+        <AdUnit slot="5164259009" className="mb-8" />
         <div className="mb-16 max-w-2xl">
           <div className="mb-6 flex items-center gap-3">
             <span className="h-px w-12 bg-editorial-border dark:bg-zinc-800"></span>
@@ -99,7 +101,9 @@ export default function PdfToolsPage() {
           ))}
         </div>
 
-        <section className="mt-32 grid gap-12 md:grid-cols-3 border-t border-editorial-border dark:border-zinc-800 pt-16">
+        <AdUnit slot="5164259009" format="horizontal" className="my-16" />
+
+        <section className="mt-16 grid gap-12 md:grid-cols-3 border-t border-editorial-border dark:border-zinc-800 pt-16">
           <div className="flex flex-col gap-4">
              <Shield className="h-6 w-6 text-emerald-500" />
              <h4 className="serif text-xl font-bold text-editorial-black dark:text-white">Zero Cloud Risk</h4>
