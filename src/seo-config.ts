@@ -277,6 +277,21 @@ export const SEO_PAGES: Record<string, SEOContentProps & { metaTitle: string; me
       { question: "Does WebP support transparent backgrounds?", answer: "Yes, WebP is an excellent replacement for PNG for images with transparency." }
     ]
   },
+  "jpg-to-png": {
+    metaTitle: "Convert JPG to PNG Online – Preserve Quality | OptiPress",
+    metaDesc: "Convert JPG images to PNG format instantly. 100% private, browser-based tool to ensure your data stays secure.",
+    canonical: `${BASE_URL}/jpg-to-png`,
+    title: "JPG to PNG Converter",
+    subtitle: "High-fidelity conversion with zero data leaks.",
+    paragraphs: [
+      "PNG is the standard for high-quality images and graphics. OptiPress allows you to convert your JPG files to PNG format without any loss in visual clarity. Our tool runs entirely in your browser, meaning your photos never touch a server.",
+      "Whether you need to preserve color accuracy for professional projects or simply prefer the PNG format for its compatibility with design software, OptiPress provides a fast and secure workflow."
+    ],
+    faqs: [
+      { question: "Is this tool free?", answer: "Yes, converting JPG to PNG is free with no watermarks or hidden costs." },
+      { question: "Are my files safe?", answer: "Yes. All processing happens locally on your computer, so your images are never uploaded." }
+    ]
+  },
   "merge-pdf": {
     metaTitle: "Merge PDF Online - Combine PDF Files Locally | OptiPress",
     metaDesc: "Combine multiple PDF files into a single document instantly. 100% private and secure processing right in your browser.",

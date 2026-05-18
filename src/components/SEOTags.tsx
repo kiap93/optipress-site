@@ -19,6 +19,11 @@ export function SEOTags({
   ogType = "website",
   structuredData = []
 }: SEOTagsProps) {
+  // Normalize canonical to remove trailing slash except for the root domain if someone accidentally adds it
+  const normalizedCanonical = canonical.endsWith('/') && canonical.length > BASE_URL.length 
+    ? canonical.slice(0, -1) 
+    : canonical;
+
   const fullTitle = title.includes("OptiPress") ? title : `${title} | OptiPress`;
   
   const organizationData = {
@@ -36,11 +41,11 @@ export function SEOTags({
       {/* Basic Meta Tags */}
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
-      <link rel="canonical" href={canonical} />
+      <link rel="canonical" href={normalizedCanonical} />
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={ogType} />
-      <meta property="og:url" content={canonical} />
+      <meta property="og:url" content={normalizedCanonical} />
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={ogImage} />
